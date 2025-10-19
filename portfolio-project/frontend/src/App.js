@@ -7,12 +7,13 @@ import './App.css';
 function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-      </BrowserRouter>
+     
+<Router>
+  <Routes>
+    ...
+  </Routes>
+</Router>
+
     </LanguageProvider>
   );
 }

@@ -45,7 +45,7 @@ export default function PortfolioPage() {
       setSkills(skillsData)
       setExperience(experienceData)
       setTestimonials(testimonialsData)
-      setAboutInfo(aboutData?.[0] || null)
+      setAboutInfo(aboutData[0])
       setLoading(false)
     } catch (error) {
       console.error('Veri yükleme hatası:', error)
@@ -64,9 +64,6 @@ export default function PortfolioPage() {
       if (response.ok) {
         alert('Mesajınız başarıyla gönderildi!')
         setFormData({ name: '', email: '', subject: '', message: '' })
-      } else {
-        const err = await response.json().catch(() => null)
-        alert('Mesaj gönderilirken hata oluştu' + (err?.error ? `: ${err.error}` : ''))
       }
     } catch (error) {
       alert('Mesaj gönderilirken hata oluştu')
@@ -99,10 +96,11 @@ export default function PortfolioPage() {
               <a href="#portfolio" className="hover:text-primary transition">Portfolyo</a>
               <a href="#experience" className="hover:text-primary transition">Deneyim</a>
               <a href="#contact" className="hover:text-primary transition">İletişim</a>
+              <a href="/admin" className="text-primary font-semibold">Admin</a>
             </div>
             
             {/* Mobile Menu Button */}
-            <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Mobil menü">
+            <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <X /> : <Menu />}
             </button>
           </div>
@@ -122,8 +120,8 @@ export default function PortfolioPage() {
         </div>
       </nav>
 
-      {/* Hero Section — hero-bg eklendi, görsel responsive ve max genişlik verildi */}
-      <section id="home" className="hero-bg pt-24 pb-16 bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-background">
+      {/* Hero Section */}
+      <section id="home" className="pt-24 pb-16 bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-background">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -146,12 +144,8 @@ export default function PortfolioPage() {
                 </Button>
               </div>
             </div>
-            <div className="flex justify-center">
-              <img
-                src="https://images.unsplash.com/photo-1581092335331-5e00ac65e934"
-                alt="Engineering"
-                className="rounded-lg shadow-2xl w-full max-w-md object-cover"
-              />
+            <div>
+              <img src="https://images.unsplash.com/photo-1581092335331-5e00ac65e934" alt="Engineering" className="rounded-lg shadow-2xl" />
             </div>
           </div>
           
@@ -406,103 +400,104 @@ export default function PortfolioPage() {
       <section id="contact" className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold mb-8 text-center">İletişime Geçin</h2>
-        <div className="text-center text-muted-foreground mb-12">Projeleriniz hakkında konuşmak veya işbirliği yapmak için benimle iletişime geçin</div>
-        
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">İletişim Bilgileri</h3>
-            <div className="space-y-4">
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <Mail className="text-primary" />
-                    <div>
-                      <h4 className="font-semibold">E-posta</h4>
-                      <a href="mailto:edizgndd@hotmail.com" className="text-muted-foreground hover:text-primary">edizgndd@hotmail.com</a>
+          <p className="text-center text-muted-foreground mb-12">Projeleriniz hakkında konuşmak veya işbirliği yapmak için benimle iletişime geçin</p>
+          
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-2xl font-bold mb-6">İletişim Bilgileri</h3>
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-3">
+                      <Mail className="text-primary" />
+                      <div>
+                        <h4 className="font-semibold">E-posta</h4>
+                        <a href="mailto:edizgndd@hotmail.com" className="text-muted-foreground hover:text-primary">edizgndd@hotmail.com</a>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-3">
+                      <Phone className="text-primary" />
+                      <div>
+                        <h4 className="font-semibold">Telefon</h4>
+                        <a href="tel:+905363912806" className="text-muted-foreground hover:text-primary">+90 536 391 28 06</a>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="text-primary" />
+                      <div>
+                        <h4 className="font-semibold">Konum</h4>
+                        <p className="text-muted-foreground">Bursa, Türkiye</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
               
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <Phone className="text-primary" />
-                    <div>
-                      <h4 className="font-semibold">Telefon</h4>
-                      <a href="tel:+905363912806" className="text-muted-foreground hover:text-primary">+90 536 391 28 06</a>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="text-primary" />
-                    <div>
-                      <h4 className="font-semibold">Konum</h4>
-                      <p className="text-muted-foreground">Bursa, Türkiye</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <img src="https://images.unsplash.com/photo-1600869009498-8d429f88d4f5" alt="Engineering" className="rounded-lg mt-6" />
             </div>
             
-            <img src="https://images.unsplash.com/photo-1600869009498-8d429f88d4f5" alt="Engineering" className="rounded-lg mt-6" />
-          </div>
-          
-          {/* Contact Form */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">Mesaj Gönder</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block mb-2 font-medium">Adınız</label>
-                <Input 
-                  placeholder="Adınız ve soyadınız"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-medium">E-posta</label>
-                <Input 
-                  type="email"
-                  placeholder="ornek@email.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-medium">Konu</label>
-                <Input 
-                  placeholder="Mesaj konusu"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-medium">Mesajınız</label>
-                <Textarea 
-                  placeholder="Mesajınızı buraya yazın..."
-                  rows={6}
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  required
-                />
-              </div>
-              
-              <Button type="submit" size="lg" className="w-full">
-                Mesaj Gönder
-              </Button>
-            </form>
+            {/* Contact Form */}
+            <div>
+              <h3 className="text-2xl font-bold mb-6">Mesaj Gönder</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block mb-2 font-medium">Adınız</label>
+                  <Input 
+                    placeholder="Adınız ve soyadınız"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block mb-2 font-medium">E-posta</label>
+                  <Input 
+                    type="email"
+                    placeholder="ornek@email.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block mb-2 font-medium">Konu</label>
+                  <Input 
+                    placeholder="Mesaj konusu"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block mb-2 font-medium">Mesajınız</label>
+                  <Textarea 
+                    placeholder="Mesajınızı buraya yazın..."
+                    rows={6}
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    required
+                  />
+                </div>
+                
+                <Button type="submit" size="lg" className="w-full">
+                  Mesaj Gönder
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </section>

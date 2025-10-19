@@ -96,7 +96,6 @@ export default function PortfolioPage() {
               <a href="#portfolio" className="hover:text-primary transition">Portfolyo</a>
               <a href="#experience" className="hover:text-primary transition">Deneyim</a>
               <a href="#contact" className="hover:text-primary transition">İletişim</a>
-              <a href="/admin" className="text-primary font-semibold">Admin</a>
             </div>
             
             {/* Mobile Menu Button */}

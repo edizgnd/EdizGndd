@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+// Use the server-side supabase client (service role)
+// If your existing '@/lib/supabase' already exports a service-role client, keep it.
+// Otherwise replace with the server client above:
+import { supabase } from '@/lib/supabaseServer' // <-- ensure this file exists and uses SERVICE_ROLE
 
 // Helper function to handle CORS
 function handleCORS(response) {
   response.headers.set('Access-Control-Allow-Origin', process.env.CORS_ORIGINS || '*')
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  // include the admin header here so preflight allows it
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-token')
   response.headers.set('Access-Control-Allow-Credentials', 'true')
   return response
 }
@@ -14,6 +18,18 @@ function handleCORS(response) {
 export async function OPTIONS() {
   return handleCORS(new NextResponse(null, { status: 200 }))
 }
+
+// Require admin token for mutating requests
+function requireAdmin(request) {
+  const adminToken = request.headers.get('x-admin-token')
+  if (process.env.ADMIN_API_TOKEN) {
+    return adminToken === process.env.ADMIN_API_TOKEN
+  }
+  // If ADMIN_API_TOKEN is not set, deny in prod (safe default).
+  return false
+}
+
+/* ---------- Handlers (unchanged logic but admin-protected for mutating methods) ---------- */
 
 // Projects API
 async function handleProjects(request) {
@@ -28,6 +44,11 @@ async function handleProjects(request) {
       return handleCORS(NextResponse.json({ error: error.message }, { status: 500 }))
     }
     return handleCORS(NextResponse.json(data || []))
+  }
+
+  // Mutations require admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
   }
   
   if (request.method === 'POST') {
@@ -91,6 +112,11 @@ async function handleSkills(request) {
     }
     return handleCORS(NextResponse.json(data || []))
   }
+
+  // Mutations require admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
+  }
   
   if (request.method === 'POST') {
     const body = await request.json()
@@ -153,6 +179,11 @@ async function handleExperience(request) {
     }
     return handleCORS(NextResponse.json(data || []))
   }
+
+  // Mutations require admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
+  }
   
   if (request.method === 'POST') {
     const body = await request.json()
@@ -214,6 +245,11 @@ async function handleTestimonials(request) {
       return handleCORS(NextResponse.json({ error: error.message }, { status: 500 }))
     }
     return handleCORS(NextResponse.json(data || []))
+  }
+
+  // Mutations require admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
   }
   
   if (request.method === 'POST') {
@@ -297,6 +333,11 @@ async function handleContact(request) {
     return handleCORS(NextResponse.json(data))
   }
   
+  // Deleting messages requires admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
+  }
+
   if (request.method === 'DELETE') {
     const body = await request.json()
     const { error } = await supabase
@@ -324,6 +365,11 @@ async function handleAbout(request) {
       return handleCORS(NextResponse.json({ error: error.message }, { status: 500 }))
     }
     return handleCORS(NextResponse.json(data || []))
+  }
+
+  // Mutations require admin
+  if (!requireAdmin(request)) {
+    return handleCORS(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
   }
   
   if (request.method === 'PUT') {

@@ -31,22 +31,27 @@ export default function AdminPanel() {
   }, [])
 
   const fetchAllData = async () => {
-    const [projectsRes, skillsRes, experienceRes, testimonialsRes, messagesRes, aboutRes] = await Promise.all([
-      fetch('/api/projects'),
-      fetch('/api/skills'),
-      fetch('/api/experience'),
-      fetch('/api/testimonials'),
-      fetch('/api/contact'),
-      fetch('/api/about')
-    ])
-    
-    setProjects(await projectsRes.json())
-    setSkills(await skillsRes.json())
-    setExperience(await experienceRes.json())
-    setTestimonials(await testimonialsRes.json())
-    setMessages(await messagesRes.json())
-    const aboutData = await aboutRes.json()
-    setAboutInfo(aboutData[0])
+    try {
+      const [projectsRes, skillsRes, experienceRes, testimonialsRes, messagesRes, aboutRes] = await Promise.all([
+        fetch('/api/projects'),
+        fetch('/api/skills'),
+        fetch('/api/experience'),
+        fetch('/api/testimonials'),
+        fetch('/api/contact'),
+        fetch('/api/about')
+      ])
+      
+      setProjects(await projectsRes.json())
+      setSkills(await skillsRes.json())
+      setExperience(await experienceRes.json())
+      setTestimonials(await testimonialsRes.json())
+      setMessages(await messagesRes.json())
+      const aboutData = await aboutRes.json()
+      setAboutInfo(aboutData[0])
+    } catch (error) {
+      console.error('fetchAllData error', error)
+      alert('Veriler yüklenirken hata oluştu. Konsolu kontrol edin.')
+    }
   }
 
   // Project Functions
@@ -60,20 +65,30 @@ export default function AdminPanel() {
       year: formData.get('year'),
       description: formData.get('description'),
       image: formData.get('image'),
-      tags: formData.get('tags').split(',').map(t => t.trim())
+      tags: (formData.get('tags') || '').split(',').map(t => t.trim()).filter(Boolean)
     }
 
     const method = editingProject ? 'PUT' : 'POST'
-    const response = await fetch('/api/projects', {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(projectData)
-    })
+    try {
+      const response = await fetch('/api/projects', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projectData)
+      })
 
-    if (response.ok) {
-      fetchAllData()
-      setDialogOpen(false)
-      setEditingProject(null)
+      if (response.ok) {
+        await fetchAllData()
+        setDialogOpen(false)
+        setEditingProject(null)
+        alert('Proje başarıyla kaydedildi.')
+      } else {
+        const err = await response.json().catch(() => ({ error: 'Bilinmeyen hata' }))
+        console.error('API error', err)
+        alert('Proje kaydedilirken hata oluştu: ' + (err.error || JSON.stringify(err)))
+      }
+    } catch (err) {
+      console.error('Network or unexpected error', err)
+      alert('Ağ hatası veya beklenmeyen hata: ' + err.message)
     }
   }
 
@@ -96,7 +111,7 @@ export default function AdminPanel() {
       id: editingSkill?.id || `skill_${Date.now()}`,
       name: formData.get('name'),
       category: formData.get('category'),
-      percentage: parseInt(formData.get('percentage'))
+      percentage: parseInt(formData.get('percentage')) || 0
     }
 
     const method = editingSkill ? 'PUT' : 'POST'
@@ -135,7 +150,7 @@ export default function AdminPanel() {
       startDate: formData.get('startDate'),
       endDate: formData.get('endDate'),
       description: formData.get('description'),
-      highlights: formData.get('highlights').split(',').map(h => h.trim())
+      highlights: (formData.get('highlights') || '').split(',').map(h => h.trim()).filter(Boolean)
     }
 
     const method = editingExperience ? 'PUT' : 'POST'
@@ -251,27 +266,27 @@ export default function AdminPanel() {
                       <form onSubmit={handleSaveProject} className="space-y-4">
                         <div>
                           <Label>Başlık</Label>
-                          <Input name="title" defaultValue={editingProject?.title} required />
+                          <Input name="title" defaultValue={editingProject?.title ?? ''} required />
                         </div>
                         <div>
                           <Label>Kategori</Label>
-                          <Input name="category" defaultValue={editingProject?.category} required />
+                          <Input name="category" defaultValue={editingProject?.category ?? ''} required />
                         </div>
                         <div>
                           <Label>Yıl</Label>
-                          <Input name="year" defaultValue={editingProject?.year} required />
+                          <Input name="year" defaultValue={editingProject?.year ?? ''} required />
                         </div>
                         <div>
                           <Label>Açıklama</Label>
-                          <Textarea name="description" defaultValue={editingProject?.description} required />
+                          <Textarea name="description" defaultValue={editingProject?.description ?? ''} required />
                         </div>
                         <div>
                           <Label>Görsel URL</Label>
-                          <Input name="image" defaultValue={editingProject?.image} required />
+                          <Input name="image" defaultValue={editingProject?.image ?? ''} required />
                         </div>
                         <div>
                           <Label>Etiketler (virgülle ayırın)</Label>
-                          <Input name="tags" defaultValue={editingProject?.tags?.join(', ')} required />
+                          <Input name="tags" defaultValue={editingProject?.tags ? editingProject.tags.join(', ') : ''} />
                         </div>
                         <Button type="submit">Kaydet</Button>
                       </form>
@@ -335,15 +350,15 @@ export default function AdminPanel() {
                       <form onSubmit={handleSaveSkill} className="space-y-4">
                         <div>
                           <Label>İsim</Label>
-                          <Input name="name" defaultValue={editingSkill?.name} required />
+                          <Input name="name" defaultValue={editingSkill?.name ?? ''} required />
                         </div>
                         <div>
                           <Label>Kategori</Label>
-                          <Input name="category" defaultValue={editingSkill?.category} required />
+                          <Input name="category" defaultValue={editingSkill?.category ?? ''} required />
                         </div>
                         <div>
                           <Label>Yüzde (%)</Label>
-                          <Input name="percentage" type="number" min="0" max="100" defaultValue={editingSkill?.percentage} required />
+                          <Input name="percentage" type="number" min="0" max="100" defaultValue={editingSkill?.percentage ?? ''} required />
                         </div>
                         <Button type="submit">Kaydet</Button>
                       </form>
@@ -407,40 +422,40 @@ export default function AdminPanel() {
                       <form onSubmit={handleSaveExperience} className="space-y-4">
                         <div>
                           <Label>Tip</Label>
-                          <select name="type" defaultValue={editingExperience?.type} className="w-full border rounded p-2" required>
+                          <select name="type" defaultValue={editingExperience?.type ?? 'work'} className="w-full border rounded p-2" required>
                             <option value="work">İş Deneyimi</option>
                             <option value="education">Eğitim</option>
                           </select>
                         </div>
                         <div>
                           <Label>Başlık</Label>
-                          <Input name="title" defaultValue={editingExperience?.title} required />
+                          <Input name="title" defaultValue={editingExperience?.title ?? ''} required />
                         </div>
                         <div>
                           <Label>Şirket/Okul</Label>
-                          <Input name="company" defaultValue={editingExperience?.company} required />
+                          <Input name="company" defaultValue={editingExperience?.company ?? ''} required />
                         </div>
                         <div>
                           <Label>Konum</Label>
-                          <Input name="location" defaultValue={editingExperience?.location} required />
+                          <Input name="location" defaultValue={editingExperience?.location ?? ''} required />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <Label>Başlangıç</Label>
-                            <Input name="startDate" defaultValue={editingExperience?.startDate} required />
+                            <Input name="startDate" defaultValue={editingExperience?.startDate ?? ''} required />
                           </div>
                           <div>
                             <Label>Bitiş</Label>
-                            <Input name="endDate" defaultValue={editingExperience?.endDate} required />
+                            <Input name="endDate" defaultValue={editingExperience?.endDate ?? ''} required />
                           </div>
                         </div>
                         <div>
                           <Label>Açıklama</Label>
-                          <Textarea name="description" defaultValue={editingExperience?.description} required />
+                          <Textarea name="description" defaultValue={editingExperience?.description ?? ''} required />
                         </div>
                         <div>
                           <Label>Öne Çıkanlar (virgülle ayırın)</Label>
-                          <Textarea name="highlights" defaultValue={editingExperience?.highlights?.join(', ')} required />
+                          <Textarea name="highlights" defaultValue={editingExperience?.highlights ? editingExperience.highlights.join(', ') : ''} required />
                         </div>
                         <Button type="submit">Kaydet</Button>
                       </form>
@@ -504,19 +519,19 @@ export default function AdminPanel() {
                       <form onSubmit={handleSaveTestimonial} className="space-y-4">
                         <div>
                           <Label>İsim</Label>
-                          <Input name="name" defaultValue={editingTestimonial?.name} required />
+                          <Input name="name" defaultValue={editingTestimonial?.name ?? ''} required />
                         </div>
                         <div>
                           <Label>Rol</Label>
-                          <Input name="role" defaultValue={editingTestimonial?.role} required />
+                          <Input name="role" defaultValue={editingTestimonial?.role ?? ''} required />
                         </div>
                         <div>
                           <Label>Yorum</Label>
-                          <Textarea name="comment" defaultValue={editingTestimonial?.comment} required />
+                          <Textarea name="comment" defaultValue={editingTestimonial?.comment ?? ''} required />
                         </div>
                         <div>
                           <Label>Avatar URL</Label>
-                          <Input name="avatar" defaultValue={editingTestimonial?.avatar} required />
+                          <Input name="avatar" defaultValue={editingTestimonial?.avatar ?? ''} required />
                         </div>
                         <Button type="submit">Kaydet</Button>
                       </form>

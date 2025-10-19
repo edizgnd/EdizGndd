@@ -1,19 +1,23 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AdminPanel from './pages/AdminPanel';
 import { LanguageProvider } from './context/LanguageContext';
-import './App.css';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: '/admin',
+    element: <AdminPanel />,
+  },
+]);
 
 function App() {
   return (
     <LanguageProvider>
-     
-<Router>
-  <Routes>
-    ...
-  </Routes>
-</Router>
-
+      <RouterProvider router={router} />
     </LanguageProvider>
   );
 }

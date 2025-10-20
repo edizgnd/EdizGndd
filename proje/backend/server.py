@@ -14,6 +14,15 @@ load_dotenv(ROOT_DIR / '.env')
 # Create the main app
 app = FastAPI(title="Ediz Gundogdu Portfolio API")
 
+# CORS middleware MUST be added BEFORE routes
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Include routers
 app.include_router(admin.router)
 app.include_router(public.router)
@@ -27,14 +36,6 @@ async def root():
 @app.get("/api/health")
 async def health():
     return {"status": "healthy"}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configure logging
 logging.basicConfig(

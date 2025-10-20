@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio İndir - Ediz Gündoğdu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .download-btn {
+            display: inline-block;
+            background: #1a1a1a;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        .info h3 {
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .info li {
+            padding: 8px 0;
+            color: #555;
+        }
+        .info li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .tech-badge {
+            background: #e9ecef;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Portfolio Website Hazır!</h1>
+        <p class="subtitle">Ediz Gündoğdu - Makine Mühendisi Portfolio</p>
+        
+        <a href="/portfolio-website.zip" class="download-btn" download>
+            📦 Tüm Dosyaları İndir
+        </a>
+        
+        <div class="info">
+            <h3>Paket İçeriği:</h3>
+            <ul>
+                <li>React Frontend (Türkçe/İngilizce Çift Dil)</li>
+                <li>FastAPI Backend</li>
+                <li>Supabase Veritabanı Kurulum Dosyaları</li>
+                <li>Admin Paneli (/admin)</li>
+                <li>Örnek Veriler</li>
+                <li>Detaylı README ve Kurulum Talimatları</li>
+            </ul>
+        </div>
+
+        <div class="tech-stack">
+            <span class="tech-badge">React</span>
+            <span class="tech-badge">FastAPI</span>
+            <span class="tech-badge">Supabase</span>
+            <span class="tech-badge">TailwindCSS</span>
+            <span class="tech-badge">Shadcn UI</span>
+        </div>
+
+        <div class="info" style="margin-top: 20px;">
+            <h3>🔐 Admin Panel Bilgileri:</h3>
+            <ul>
+                <li>URL: /admin</li>
+                <li>Kullanıcı Adı: <strong>edizgndd</strong></li>
+                <li>Şifre: <strong>280620Gndd.</strong></li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 30px; color: #999; font-size: 0.9rem;">
+            Kurulum için README.md dosyasını okuyun
+        </p>
+    </div>
+</body>
+</html>

@@ -31,8 +31,24 @@ const Header = () => {
       <nav className="container mx-auto px-4 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#home" className="text-2xl font-bold text-white">
-            EG
+          <a href="#home" className="flex items-center group">
+            <div className="relative">
+              {/* Logo Background Circle */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg transform group-hover:scale-110 transition-transform duration-300"></div>
+              
+              {/* Logo Text */}
+              <div className="relative px-3 py-2">
+                <span className="text-2xl font-bold text-white tracking-tight">
+                  E<span className="text-blue-200">G</span>
+                </span>
+              </div>
+            </div>
+            
+            {/* Name (hidden on mobile) */}
+            <div className="ml-3 hidden sm:block">
+              <span className="text-white font-semibold text-lg">Ediz Gündoğdu</span>
+              <div className="text-xs text-gray-400">Mechanical Engineer</div>
+            </div>
           </a>
 
           {/* Desktop Navigation */}

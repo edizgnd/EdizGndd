@@ -194,4 +194,3 @@ async def delete_social_link(link_id: int):
     except Exception as e:
         logger.error(f"Error deleting social link: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-

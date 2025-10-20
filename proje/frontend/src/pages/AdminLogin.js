@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card } from '../components/ui/card';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AdminLogin = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -17,38 +17,14 @@ const AdminLogin = ({ onLogin }) => {
     setLoading(true);
     setError('');
 
-    console.log('Backend URL:', BACKEND_URL);
-    console.log('Sending credentials:', { username: credentials.username, password: '***' });
-
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/admin/login`, {
-        username: credentials.username.trim(),
-        password: credentials.password
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      console.log('Login response:', response.data);
-      
+      const response = await axios.post(`${BACKEND_URL}/api/admin/login`, credentials);
       if (response.data.success) {
         localStorage.setItem('adminToken', response.data.token);
         onLogin();
-      } else {
-        setError('Giriş başarısız. Lütfen tekrar deneyin.');
       }
     } catch (err) {
-      console.error('Login error:', err);
-      console.error('Error response:', err.response?.data);
-      
-      if (err.response?.status === 401) {
-        setError('Kullanıcı adı veya şifre hatalı');
-      } else if (err.code === 'ERR_NETWORK') {
-        setError('Backend sunucusuna bağlanılamıyor. Backend çalışıyor mu?');
-      } else {
-        setError(err.response?.data?.detail || 'Bir hata oluştu. Lütfen tekrar deneyin.');
-      }
+      setError('Geçersiz kullanıcı adı veya şifre');
     } finally {
       setLoading(false);
     }
@@ -90,3 +66,4 @@ const AdminLogin = ({ onLogin }) => {
 };
 
 export default AdminLogin;
+
